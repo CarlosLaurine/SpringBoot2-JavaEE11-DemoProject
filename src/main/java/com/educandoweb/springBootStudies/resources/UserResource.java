@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.educandoweb.springBootStudies.entities.User;
 
+//Creating RestController that answers to the path "/users"
+
 //Putting an annotation to signal that this class is a web resource implemented by a Rest Controller
 @RestController
 
-//Setting a name to the Resource through Resource Path
+//Setting a name to the Resource and setting a Resource Path
 @RequestMapping (value = "/users")
 
 public class UserResource {
@@ -25,7 +27,7 @@ public class UserResource {
 		User user = new User(1L, "john", "john@gmail.com", "99999-7777", "12345");
 		
 		/*Calling ResponseENTITY.ok() to successfully return the response at HTTP protocol 
-		  and .body() to also return the response body */
+		  and .body() to also return the response body with the User object user */
 		
 		return ResponseEntity.ok().body(user);
 		
