@@ -7,12 +7,10 @@ import com.educandoweb.springBootStudies.entities.User;
 /*Creating a User Repository (interface) extending Spring Data JPA's JPA Repository 
   based on the Entity Type and the chosen Id*/
 
-/*OBS: In this case it is not required to create the interface implementation,
-  since Spring Data JPA has a default implementation for this type of interface.
-  Once a Generic JpaRepository with the Entity and the Entity Id is defined
-  as being extended, a pre-existent default implementation will automatically occur */
-
-
+/*OBS: Since UserRepository is already extending a Spring-Registered Interface JPARepository,
+  it is exempt of the Registration at the Spring Dependence-Injection Mechanism. Thus, it is not
+  required to use annotations such as @Component or @Repository (it is merely optional) 
+*/
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
