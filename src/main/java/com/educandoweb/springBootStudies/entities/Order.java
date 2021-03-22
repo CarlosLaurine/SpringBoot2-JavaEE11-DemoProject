@@ -1,17 +1,14 @@
 package com.educandoweb.springBootStudies.entities;
 
-//Inserting JPA's Relational-Object Mapping at the Class
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Instant;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /*Implementing Serializable interface in order to
@@ -20,16 +17,13 @@ byte sequences, thus ensuring a broader perspective
 of manipulation (net roaming, file imprinting, etc)
 */
 
-
 //Defining it as a DataBase Table
 @Entity
-
 /*Signaling to JPA a new name for the auto-generated
-Order table at the database, in order to avoid conflicts
-with possible reserved word from SQL*/
-@Table(name = "tb_user")
-
-public class User implements Serializable {
+  Order table at the database, in order to avoid conflicts
+  with the reserved word "ORDER" from SQL*/
+@Table(name = "tb_order")
+public class Order implements Serializable{
 	//Serializable Series Number
 	private static final long serialVersionUID = 1L;
 	
@@ -39,98 +33,59 @@ public class User implements Serializable {
 	//To state this, the Mapping Command is the following, with the Auto-Incrementation Strategy defined between parenthesis
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-	private String email;
-	private String phone;
-	private String password;
+
+	//Using Instant to declare the moment, instead of Date
+	//OBS: From Java 8 release on, Date became obsolete to represent moments like in this case
+	private Instant moment;
 	
-	//Defining Order association
-	//OBS: All Collections should be instanced in an association
-	/*OBS2: Friendly reminder that for collections the Set method 
-	  is discarded, only the Get one is used since the list should 
-	  not change abruptly for another list*/
-	
-	/*Implementing the relation between User and Order (One-to-Many)
+	//Defining User association
+	/*Implementing the relation between Order and User (Many-to-One)
 	  and using the following annotation to indicate to JPA the relation
-	  it needs to establish at the DataBase. To this, the User-type attribute name 
-	  defined at the other side of the association ("client") must be placed 
-	  between the following parenthesis*/
-	
-	@OneToMany(mappedBy = "client")
-	
-	private List<Order> orders = new ArrayList<>();
-	
+	  it needs to establish at the DataBase*/
+	@ManyToOne
+	//Using a second annotation to generate a Foreign Key as a new column at the Order table at the Database, while assigning a nem for this column, which is declared between the following parenthesis
+	@JoinColumn(name = "client_id")
+	private User client;
+
 	//Since a framework is being used, it is obligatory to set an empty constructor
-	public User() {
+
+	public Order() {
 		
 	}
 
-
-	public User(Long id, String name, String email, String phone, String password) {
+	public Order(Long id, Instant moment, User client) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.phone = phone;
-		this.password = password;
+		this.moment = moment;
+		this.client = client;
 	}
-
 
 	public Long getId() {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
-	public String getName() {
-		return name;
+	public Instant getMoment() {
+		return moment;
 	}
 
-
-	public void setName(String name) {
-		this.name = name;
+	public void setMoment(Instant moment) {
+		this.moment = moment;
 	}
 
-
-	public String getEmail() {
-		return email;
+	public User getClient() {
+		return client;
 	}
 
-
-	public void setEmail(String email) {
-		this.email = email;
+	public void setClient(User client) {
+		this.client = client;
 	}
 
-
-	public String getPhone() {
-		return phone;
-	}
-
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	//Setting HashCode and Equals based only on User ID
 	
+	//Setting HashCode and Equals based only on Order ID
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,7 +93,6 @@ public class User implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -148,7 +102,7 @@ public class User implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Order other = (Order) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -156,8 +110,6 @@ public class User implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 	
 	
 	
