@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /*Implementing Serializable interface in order to
 allow Department Objects to be transformed into
 byte sequences, thus ensuring a broader perspective
@@ -36,6 +38,14 @@ public class Order implements Serializable{
 
 	//Using Instant to declare the moment, instead of Date
 	//OBS: From Java 8 release on, Date became obsolete to represent moments like in this case
+	//To ensure that tHe instant will be displayed at JSON with the ISO-0681 format, the following annotation is used:
+	
+	/*OBS:As tested at Postman, when there is a  manyToOne Relation, JPA will automatically load the "one" side if 
+	  the "many" side is loaded. However, when there is a oneToMany Relation, JPA will not automatically load
+	  (unless it is requested)  the "many" side  if the "one" side is loaded in order to prevent the memory
+	  crash at the computer (This is called Lazy Loading)*/
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	
 	//Defining User association

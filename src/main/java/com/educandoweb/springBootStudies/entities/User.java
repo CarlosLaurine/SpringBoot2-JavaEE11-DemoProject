@@ -10,9 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /*Implementing Serializable interface in order to
 allow Department Objects to be transformed into
@@ -49,6 +50,15 @@ public class User implements Serializable {
 	/*OBS2: Friendly reminder that for collections the Set method 
 	  is discarded, only the Get one is used since the list should 
 	  not change abruptly for another list*/
+	
+	/*Jackson Library (responsible for JSON Serialization) would indicate a
+	  loop error if the following annotation wasn't stated. This happens because 
+	  in this case, there would be a double-handed relation between User and Order. 
+	  To fix this, it is enough to put the following annotation on one of the relation
+	  sides. Preferably at the one that has the oneToMany relation with its pair since 
+	  this way it will be possible for the JPA to load all the sides and dependencies
+	  (no Lazy Load will happen)*/
+	@JsonIgnore
 	
 	/*Implementing the relation between User and Order (One-to-Many)
 	  and using the following annotation to indicate to JPA the relation
