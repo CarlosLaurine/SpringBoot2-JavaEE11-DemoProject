@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
 
-/*Registering the class as a Spring Component in order to make available for it the Spring's 
+/*Registering the class as a Spring Component in order to make it available for the Spring's 
   Dependency-Injection Mechanism which, in this case, will be useful at declaring User 
   Resources' Dependency to the now Registered User Services*/
 
@@ -39,7 +39,7 @@ public class UserService {
 		//OBS: the operation findByid() from JPA CRUD returns an Optional-typed object
 		Optional<User> user = userRepository.findById(id);
 		
-		//Returning User type return through Optional Object Method .get()
+		//Returning User type through Optional Object Method .get()
 		return user.get();
 		
 	}

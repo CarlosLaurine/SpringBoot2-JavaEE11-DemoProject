@@ -11,7 +11,7 @@ import com.educandoweb.springBootStudies.repositories.OrderRepository;
 
 /*Registering the class as a Spring Component in order to make available for it the Spring's 
   Dependency-Injection Mechanism which, in this case, will be useful at declaring Order 
-  Resources' Dependency to the now Registered User Services*/
+  Resources' Dependency to the now Registered Order Services*/
 
 /*OBS:This Registration can be made through different annotations: @Component, @Repository 
   and @Service, the first being more general and the two last ones having a more specific 
@@ -22,7 +22,7 @@ import com.educandoweb.springBootStudies.repositories.OrderRepository;
 public class OrderService {
 
 	/*In order for Spring Framework to provide the required dependence definitions and associate an 
-	instance of UserRepository at UserService, it is required to put the following annotation 
+	instance of OrderRepository at OrderService, it is required to put the following annotation 
 	above the Dependency attribute*/
 	@Autowired
 	private OrderRepository orderRepository;

@@ -10,39 +10,43 @@ import org.springframework.context.annotation.Profile;
 
 import com.educandoweb.springBootStudies.entities.Order;
 import com.educandoweb.springBootStudies.entities.User;
+import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.educandoweb.springBootStudies.repositories.OrderRepository;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
 
-/*Creating auxiliary class TestConfig that is out of Back End Logical Layers (Resource/Service/DAO), 
+/*Creating auxiliary class TestConfig that is out of Back End Logical Layers (Resource/Service/Repositories), 
   and will perform some configurations at the application. In this case, it will perform the 
   so-called "Database Seeding". In other words, it will populate the Database with some chosen Objects*/
 
 //Indicating to Spring that this is a specific configuration class with the following annotation
 @Configuration
 /*Indicating to Spring that this configuration class will be specific for the test profile with 
-  the following annotation, once informing between its parenthesis the same spring profile defined
-  at application.properties file*/
+  the following annotation. To this, one must inform the same spring profile defined
+  at application.properties file between its parenthesis */
 @Profile("test")
 
 /*In order to EXECUTE Object Instantiation and Saving at the Database (Database Seeding), 
   the TestConfig can implement CommandLineRunner Interface*/
 public class TestConfig implements CommandLineRunner{
 	
-	/*OBS: The Configuration Class must have a weak-coupling dependency with UserRepository in order to 
+	/*OBS: The Configuration Class must have a weak-coupling dependency with UserRepository/OrderRepository in order to 
 	  use its features to access the Database and perform the Database Seeding*/
    
 	/*OBS2: Instead of requiring the usual manual Dependency-Injection (through constructors, for example),
      the Spring Framework automatically enables this process through its implicit Dependency-Injection
-     Mechanism  */
+     Mechanism */
 	
 	//Declaring UserRepository Dependence
 	
 	/*OBS3: In order for Spring to provide the required dependence definitions and associate an 
-	instance of UserRepository at TestConfig, it is required to put the following annotation 
+	instance of UserRepository/OrderRepository at TestConfig, it is required to put the following annotation 
 	above the Dependency attribute*/
+	
 	@Autowired
 	private UserRepository userRepository;
 
+	//Declaring OrderRepository Dependence
+	
 	@Autowired
 	private OrderRepository orderRepository;
 
@@ -59,9 +63,9 @@ public class TestConfig implements CommandLineRunner{
 		
 		//Instancing order objects with null IDs and related user objects at their constructors to build the DB relation
 		//OBS: At H2 Test Database, the local hour will be displayed, which can deviate from the Instant set below
-		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), u1);
-		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), u2);
-		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), u1); 
+		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"),OrderStatus.PAID ,u1);
+		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"),OrderStatus.WAITING_PAYMENT, u2);
+		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.DELIVERED, u1); 
 	
 		/*Using UserRepository object to perform the Repository role of Data-Accessing and save the 
 		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/

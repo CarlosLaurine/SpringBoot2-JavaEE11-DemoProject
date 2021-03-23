@@ -68,7 +68,7 @@ public class UserResource {
 	  then the "id" word must be surrounded wit brackets {}*/
 	@GetMapping(value = ("/{id}"))
 	
-	/*OBS2:In order for spring to accept the id as a parameter and displays it at the URL, it is required to put an annotation
+	/*OBS2:In order for spring to accept the id as a parameter and display it at the URL, it is required to put an annotation
 	  @PathVariable right before with the id Parameter at the method signature */
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 	

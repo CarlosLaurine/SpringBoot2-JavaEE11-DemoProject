@@ -11,13 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-/*Implementing Serializable interface in order to
-allow Department Objects to be transformed into
-byte sequences, thus ensuring a broader perspective
-of manipulation (net roaming, file imprinting, etc)
-*/
 
 //Defining it as a DataBase Table
 @Entity
@@ -25,6 +20,12 @@ of manipulation (net roaming, file imprinting, etc)
   Order table at the database, in order to avoid conflicts
   with the reserved word "ORDER" from SQL*/
 @Table(name = "tb_order")
+
+/*Implementing Serializable interface in order to
+allow Order Objects to be transformed into
+byte sequences, thus ensuring a broader perspective
+of manipulation (net roaming, file imprinting, etc)
+*/
 public class Order implements Serializable{
 	//Serializable Series Number
 	private static final long serialVersionUID = 1L;
@@ -35,15 +36,15 @@ public class Order implements Serializable{
 	//To state this, the Mapping Command is the following, with the Auto-Incrementation Strategy defined between parenthesis
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
-
-	//Using Instant to declare the moment, instead of Date
-	//OBS: From Java 8 release on, Date became obsolete to represent moments like in this case
-	//To ensure that tHe instant will be displayed at JSON with the ISO-0681 format, the following annotation is used:
 	
 	/*OBS:As tested at Postman, when there is a  manyToOne Relation, JPA will automatically load the "one" side if 
 	  the "many" side is loaded. However, when there is a oneToMany Relation, JPA will not automatically load
-	  (unless it is requested)  the "many" side  if the "one" side is loaded in order to prevent the memory
+	  (unless it is requested) the "many" side  if the "one" side is loaded, in order to prevent the memory
 	  crash at the computer (This is called Lazy Loading)*/
+	
+	//Using Instant to declare the moment, instead of Date
+	//OBS: From Java 8 release on, Date became obsolete to represent moments like in this case
+	//To ensure that the instant will be displayed at JSON with the ISO-0681 format, the following annotation is used:
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
@@ -52,9 +53,19 @@ public class Order implements Serializable{
 	/*Implementing the relation between Order and User (Many-to-One)
 	  and using the following annotation to indicate to JPA the relation
 	  it needs to establish at the DataBase*/
+	
+	/*Setting orderStatus as a number instead of Enum OrderStatus type,
+	  to highlight the fact that an int number is being saved at H2 Database*/
+	/*OBS:This int treatment will happen only internally, other treatments will
+	  be applied to the internal Constructor and GET/SET Methods in order to 
+	  keep their processing/returns as if orderStatus was typed as Enum */ 
+	
+	private Integer orderStatus;
+	
 	@ManyToOne
-	//Using a second annotation to generate a Foreign Key as a new column at the Order table at the Database, while assigning a nem for this column, which is declared between the following parenthesis
+	//Using a second annotation to generate a Foreign Key as a new column at the Order table at the Database, while assigning a name for this column, which is declared between the following parenthesis
 	@JoinColumn(name = "client_id")
+	
 	private User client;
 
 	//Since a framework is being used, it is obligatory to set an empty constructor
@@ -63,11 +74,13 @@ public class Order implements Serializable{
 		
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		this.client = client;
+		//Transforming OrderStatus type into an int type through setOrderStatus() Method
+		setOrderStatus(orderStatus);;
 	}
 
 	public Long getId() {
@@ -86,6 +99,20 @@ public class Order implements Serializable{
 		this.moment = moment;
 	}
 
+	public OrderStatus getOrderStatus() {
+		
+		//Using custom Order Status Method valueOf() to convert int orderStatus into an enum type
+		return OrderStatus.valueOf(orderStatus);
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		//Testing whether it was passed a null value at the object constructor
+		if(orderStatus != null) {
+		//Using custom Order Status Method getCode() to convert OrderStatus orderStatus into an int type
+		this.orderStatus = orderStatus.getCode();
+		}
+	}
+
 	public User getClient() {
 		return client;
 	}
@@ -93,6 +120,7 @@ public class Order implements Serializable{
 	public void setClient(User client) {
 		this.client = client;
 	}
+	
 
 	
 	//Setting HashCode and Equals based only on Order ID

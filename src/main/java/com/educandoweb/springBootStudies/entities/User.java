@@ -15,12 +15,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/*Implementing Serializable interface in order to
-allow Department Objects to be transformed into
-byte sequences, thus ensuring a broader perspective
-of manipulation (net roaming, file imprinting, etc)
-*/
-
 
 //Defining it as a DataBase Table
 @Entity
@@ -29,6 +23,12 @@ of manipulation (net roaming, file imprinting, etc)
 Order table at the database, in order to avoid conflicts
 with possible reserved word from SQL*/
 @Table(name = "tb_user")
+
+/*Implementing Serializable interface in order to
+allow User Objects to be transformed into
+byte sequences, thus ensuring a broader perspective
+of manipulation (net roaming, file imprinting, etc)
+*/
 
 public class User implements Serializable {
 	//Serializable Series Number
@@ -49,7 +49,7 @@ public class User implements Serializable {
 	//OBS: All Collections should be instanced in an association
 	/*OBS2: Friendly reminder that for collections the Set method 
 	  is discarded, only the Get one is used since the list should 
-	  not change abruptly for another list*/
+	  not change abruptly to another list*/
 	
 	/*Jackson Library (responsible for JSON Serialization) would indicate a
 	  loop error if the following annotation wasn't stated. This happens because 
@@ -57,7 +57,10 @@ public class User implements Serializable {
 	  To fix this, it is enough to put the following annotation on one of the relation
 	  sides. Preferably at the one that has the oneToMany relation with its pair since 
 	  this way it will be possible for the JPA to load all the sides and dependencies
-	  (no Lazy Load will happen)*/
+	  without running the risk of crashing the memory (since no Lazy Load will happen due 
+	  to Jackson's direct solicitation to the JPA)
+	  */
+	
 	@JsonIgnore
 	
 	/*Implementing the relation between User and Order (One-to-Many)
