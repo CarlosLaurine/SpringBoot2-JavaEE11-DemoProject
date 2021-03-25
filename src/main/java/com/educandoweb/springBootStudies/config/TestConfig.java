@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.educandoweb.springBootStudies.entities.Category;
 import com.educandoweb.springBootStudies.entities.Order;
+import com.educandoweb.springBootStudies.entities.Product;
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.educandoweb.springBootStudies.repositories.CategoryRepository;
 import com.educandoweb.springBootStudies.repositories.OrderRepository;
+import com.educandoweb.springBootStudies.repositories.ProductRepository;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
 
 /*Creating auxiliary class TestConfig that is out of Back End Logical Layers (Resource/Service/Repositories), 
@@ -31,7 +33,8 @@ import com.educandoweb.springBootStudies.repositories.UserRepository;
   the TestConfig can implement CommandLineRunner Interface*/
 public class TestConfig implements CommandLineRunner{
 	
-	/*OBS: The Configuration Class must have a weak-coupling dependency with UserRepository/OrderRepository in order to 
+	/*OBS: The Configuration Class must have a weak-coupling dependency with 
+	  UserRepository/OrderRepository/CategoryRepository/productRepository in order to 
 	  use its features to access the Database and perform the Database Seeding*/
    
 	/*OBS2: Instead of requiring the usual manual Dependency-Injection (through constructors, for example),
@@ -40,8 +43,8 @@ public class TestConfig implements CommandLineRunner{
 	
 	
 	/*OBS3: In order for Spring to provide the required dependence definitions and associate an 
-	instance of UserRepository/OrderRepository/CategoryRepository at TestConfig, it is required to
-    put the following annotation above the Dependency attribute*/
+	instance of UserRepository/OrderRepository/CategoryRepository/productRepository at TestConfig, 
+	it is required to put the following annotation above the Dependency attribute*/
 	
 	//Declaring UserRepository Dependence
 	
@@ -57,9 +60,14 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	//Declaring ProductRepository Dependence
+	
+	@Autowired
+	private ProductRepository productRepository;
 
 	
-	/*Implementing CommandLineRunner's override method "run()", which executes all of his body content 
+	/*Implementing CommandLineRunner's override method "run()", which executes all of its body content 
 	  once the application is initiated
     */
 	@Override
@@ -79,6 +87,15 @@ public class TestConfig implements CommandLineRunner{
 		Category cat1 = new Category(null, "Electronics");
 		Category cat2 = new Category(null, "Books");
 		Category cat3 = new Category(null, "Computers");
+		
+		//Instancing Category objects with null IDs once they will be auto-generated as keys at the database
+
+		Product prod1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
+		Product prod2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
+		Product prod3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
+		Product prod4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, "");
+		Product prod5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, ""); 
+
 	
 		/*Using Repository objects to perform their respective Repository roles of Data-Accessing while saving the 
 		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/
@@ -87,6 +104,10 @@ public class TestConfig implements CommandLineRunner{
 		orderRepository.saveAll(Arrays.asList(o1,o2,o3));
 		
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
+		
+		productRepository.saveAll(Arrays.asList(prod1,prod2,prod3,prod4,prod5));
+		
+		
 		
 	}
 

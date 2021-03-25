@@ -71,8 +71,8 @@ public class Order implements Serializable{
 	
 	private User client;
 
-	//Since a framework is being used, it is obligatory to set an empty constructor
-
+	//Since a framework is being used, it is obligatory to set an empty constructor	
+	
 	public Order() {
 		
 	}
