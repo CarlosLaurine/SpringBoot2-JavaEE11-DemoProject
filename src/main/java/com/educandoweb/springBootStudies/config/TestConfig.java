@@ -83,12 +83,18 @@ public class TestConfig implements CommandLineRunner{
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"),OrderStatus.WAITING_PAYMENT, u2);
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.DELIVERED, u1); 
 		
+		/*Using Repository objects to perform their respective Repository roles of Data-Accessing while saving the 
+		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/
+		userRepository.saveAll(Arrays.asList(u1, u2));
+	
+		orderRepository.saveAll(Arrays.asList(o1,o2,o3));
+		
 		//Instancing Category objects with null IDs once they will be auto-generated as keys at the database
 		Category cat1 = new Category(null, "Electronics");
 		Category cat2 = new Category(null, "Books");
 		Category cat3 = new Category(null, "Computers");
 		
-		//Instancing Category objects with null IDs once they will be auto-generated as keys at the database
+		//Instancing Product objects with null IDs once they will be auto-generated as keys at the database
 
 		Product prod1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
 		Product prod2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
@@ -99,16 +105,31 @@ public class TestConfig implements CommandLineRunner{
 	
 		/*Using Repository objects to perform their respective Repository roles of Data-Accessing while saving the 
 		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/
-		userRepository.saveAll(Arrays.asList(u1, u2));
-	
-		orderRepository.saveAll(Arrays.asList(o1,o2,o3));
 		
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
 		
 		productRepository.saveAll(Arrays.asList(prod1,prod2,prod3,prod4,prod5));
 		
+		/*Once both Product and Category Databases are Seeded by the .saveAll Methods with the respective
+		  instantiated objects, it is time to Set the Category/Product Association in order to 
+		  define which Category is Related to which Product or vice-versa. To do this, the respective Product objects'
+		  Set Collection attributes will be called through its get methods and then will add its Category objects
+		  through .add() method*/
 		
+		prod1.getCategories().add(cat2);
+		prod2.getCategories().add(cat1);
+		prod2.getCategories().add(cat3);
+		prod3.getCategories().add(cat3);
+		prod4.getCategories().add(cat3);
+		prod5.getCategories().add(cat2);
 		
+		/*Now that all additions (Associations) are made, it is required to re-save all products to establish 
+		  those associations at the databases involved (tb_product, tb_category and tb_product_category).*/
+		
+		//OBS:This will also automatically Seed the tb_product_category Association Table Database
+		
+		productRepository.saveAll(Arrays.asList(prod1,prod2,prod3,prod4,prod5));
+			
 	}
 
 }

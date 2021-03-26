@@ -1,6 +1,5 @@
 package com.educandoweb.springBootStudies.entities;
 
-import java.beans.Transient;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 //Defining it as a DataBase Table
@@ -43,6 +45,9 @@ public class Product implements Serializable{
 	private Double price;
 	private String imgUrl;
 	
+	
+	//Defining Category Association
+	
 	/*To ensure that no Product will have more than one of the same Category,
 	  it will be used another Java Collection other than List
 	  to represent Product's relation with Orders. The Collection
@@ -50,9 +55,34 @@ public class Product implements Serializable{
 	  Nature and related features
 	 */
 	
+	// OBS: All Collections should be instanced in an association
+
+	/* OBS2: Friendly reminder that for collections the Set method is discarded,
+	   only the Get one is used since the list should not change abruptly to another
+	   list
+	 */
+	
     //OBS:The annotation @Transient prevents JPA from interpreting the element below
 	
-	@Transient
+	//@Transient
+	
+	/*Implementing the relation between Product and Category (Many-to-Many)
+	  and using the following annotation to indicate to JPA the relation
+	  it needs to establish at the DataBase*/
+	
+	@ManyToMany
+	
+	//Using annotation @JoinColumn to create the Category/Product Association Table
+	
+	/*OBS: Between the parenthesis, the Table name will be set along with the Foreign Keys
+	  that will associate both Product and Category. To the latter feature, the parameters to 
+	  define the Table's Join Columns (or Foreign Keys), will be the following : joinColumns 
+	  (to set the foreign keys' column for the products at the Association Table), and  
+	  inverseJoinColumns (to define the Foreign Keys for the other side of the Association 
+	  (In this case, the Categories) at the Association Table */
+	
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"),
+	inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
 	//Since a framework is being used, it is obligatory to set an empty constructor

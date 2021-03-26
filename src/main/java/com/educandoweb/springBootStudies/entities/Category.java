@@ -1,7 +1,5 @@
 package com.educandoweb.springBootStudies.entities;
 
-import java.beans.Transient;
-
 //Inserting JPA's Relational-Object Mapping at the Class
 
 import java.io.Serializable;
@@ -12,7 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Defining it as a DataBase Table
 @Entity
@@ -41,16 +42,46 @@ public class Category implements Serializable{
 	private Long id;
 	private String name;
 	
-	/*To ensure that no Category will have more than one of the same Product,
-	  it will be used another Java Collection other than List
-	  to represent Product's relation with Orders. The Collection
-	  that best fits this duty is Set due to its Mathematical Set's 
-	  Nature and related features
-	 */
+	//Defining Product association
+		
+		/*To ensure that no Category will have more than one of the same Product,
+		  it will be used another Java Collection other than List
+		  to represent Product's relation with Orders. The Collection
+		  that best fits this duty is Set due to its Mathematical Set's 
+		  Nature and related features
+		 */
+	
+		//OBS: All Collections should be instanced in an association
+	
+		/*OBS2: Friendly reminder that for collections the Set method 
+		  is discarded, only the Get one is used since the list should 
+		  not change abruptly to another list*/
+		
+		/*Jackson Library (responsible for JSON Serialization) would produce an
+	      undesirable loop display if the following annotation wasn't stated. This happens because 
+		  in this case, there would be a double-handed relation between Category and Product. 
+		  To fix this, it is enough to put the following annotation on one of the relation
+		  sides. Preferably at the one that has the oneToMany relation with its pair since 
+		  this way it will be possible for the JPA to load all the sides and dependencies
+		  without running the risk of crashing the memory (since no Lazy Load will happen due 
+		  to Jackson's direct solicitation to the JPA)
+		  */
+		
+		@JsonIgnore
+		
+		/*Implementing the relation between Category and Product (Many-to-Many)
+		  and using the following annotation to indicate to JPA the relation
+		  it needs to establish at the DataBase (Make a reference to the Mapping defined at Product). 
+		  To relate to the Category/Product Association Table, the Category-type attribute name defined 
+		  at the other side of the association ("categories") 
+		  must be placed between the following parenthesis*/
+		
+		@ManyToMany(mappedBy = "categories")
+	
 	
 	//OBS:The annotation @Transient prevents JPA from interpreting the element below
 	
-	@Transient
+	//@Transient
 	private Set<Product> products = new HashSet<>();
 	
 	//Since a framework is being used, it is obligatory to set an empty constructor

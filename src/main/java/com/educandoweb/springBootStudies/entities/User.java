@@ -51,8 +51,8 @@ public class User implements Serializable {
 	  is discarded, only the Get one is used since the list should 
 	  not change abruptly to another list*/
 	
-	/*Jackson Library (responsible for JSON Serialization) would indicate a
-	  loop error if the following annotation wasn't stated. This happens because 
+	/*Jackson Library (responsible for JSON Serialization) would produce an
+	  undesirable loop display if the following annotation wasn't stated. This happens because 
 	  in this case, there would be a double-handed relation between User and Order. 
 	  To fix this, it is enough to put the following annotation on one of the relation
 	  sides. Preferably at the one that has the oneToMany relation with its pair since 
@@ -65,9 +65,9 @@ public class User implements Serializable {
 	
 	/*Implementing the relation between User and Order (One-to-Many)
 	  and using the following annotation to indicate to JPA the relation
-	  it needs to establish at the DataBase. To this, the User-type attribute name 
-	  defined at the other side of the association ("client") must be placed 
-	  between the following parenthesis*/
+	  it needs to establish at the DataBase (Make a reference to the Mapping defined at Order). 
+	  To this, the User-type attribute name defined at the other side of the association
+	  ("client") must be placed between the following parenthesis*/
 	
 	@OneToMany(mappedBy = "client")
 	
