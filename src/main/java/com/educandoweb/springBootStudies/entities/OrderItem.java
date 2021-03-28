@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.educandoweb.springBootStudies.entities.pk.OrderItemPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Defining it as a DataBase Table
 @Entity
@@ -27,8 +28,9 @@ public class OrderItem implements Serializable{
 
 	//Setting Identifier Attribute - Correspondent to OrderItem's PrimaryKey (Composite)
 	//Using following annotation to signal to JPA that this is a Composite ID
+	//OBS: The object must be instanced, since it is an Auxiliary Class-Type
 	@EmbeddedId
-	private OrderItemPK id;
+	private OrderItemPK id = new OrderItemPK();
 	
 	private Integer quantity;
 	private Double price;
@@ -41,7 +43,7 @@ public class OrderItem implements Serializable{
 	
 	//Auto-generating Constructor using Fields (formerly excluding the Id, which will be set manually later)
 	//OBS: Both a Product and Order Parameters will be used at the constructor to set the Id attribute (Composite PK) at its Body
-	public OrderItem (Product product, Order order, Integer quantity, Double price) {
+	public OrderItem ( Order order, Product product, Integer quantity, Double price) {
 		super();
 		//Setting the id throughout Product and Order Objects
 		id.setOrder(order);
@@ -73,6 +75,31 @@ public class OrderItem implements Serializable{
 	it is needed to set Getters and Setters for both Product and Order
     Objects inside this Class */
 	
+	public Product getProduct() {
+		return id.getProduct();
+	}
+	
+	public void setProduct(Product product) {
+		id.setProduct(product);
+	}
+	
+	/*Jackson Library (responsible for JSON Serialization) would produce an
+	  undesirable loop display if the following annotation wasn't stated. This happens because 
+	  in this case, there would be a double-handed relation between User and Order. 
+	  To fix this, it is enough to put the following annotation on one of the relation
+	  sides. Preferably at the one that has the oneToMany relation with its pair since 
+	  this way it will be possible for the JPA to load all the sides and dependencies
+	  without running the risk of crashing the memory (since no Lazy Load will happen due 
+	  to Jackson's direct solicitation to the JPA)
+	  */
+	
+	/*OBS: Since Order is NOT a direct Attribute of OrderItem, but instead is accessed through 
+	  OrderItem's Id, then the @JsonIgnore Annotation will be placed at its Get Method,
+	  that is the significant part in this case for the Java Enterprise Platform since it
+	  is through this initial point of the chain reaction that Json calls the associated Order
+	  and then starts the chain loop of calls (Order-OrderItem-Order-OrderItem, ad infinitum)*/
+	
+	@JsonIgnore
 	
 	public Order getOrder() {
 		return id.getOrder();
@@ -81,14 +108,7 @@ public class OrderItem implements Serializable{
 	public void setOrder(Order order) {
 		id.setOrder(order);
 	}
-	
-	public Product getProduct() {
-		return id.getProduct();
-	}
-	
-	public void setProduct(Product product) {
-		id.setProduct(product);
-	}
+
 	
 	//Setting HashCode and Equals based only on OrderItem Id (OrderItemPk's Composite Primary Key)
 	@Override

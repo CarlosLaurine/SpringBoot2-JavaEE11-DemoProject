@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.educandoweb.springBootStudies.entities.Category;
 import com.educandoweb.springBootStudies.entities.Order;
+import com.educandoweb.springBootStudies.entities.OrderItem;
 import com.educandoweb.springBootStudies.entities.Product;
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.educandoweb.springBootStudies.repositories.CategoryRepository;
+import com.educandoweb.springBootStudies.repositories.OrderItemRepository;
 import com.educandoweb.springBootStudies.repositories.OrderRepository;
 import com.educandoweb.springBootStudies.repositories.ProductRepository;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
@@ -65,6 +67,11 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	//Declaring OrderItem Repository Dependence
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	
 	/*Implementing CommandLineRunner's override method "run()", which executes all of its body content 
@@ -84,7 +91,7 @@ public class TestConfig implements CommandLineRunner{
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.DELIVERED, u1); 
 		
 		/*Using Repository objects to perform their respective Repository roles of Data-Accessing while saving the 
-		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/
+		  instanced objects at the Database (DataBase Seeding)  through Arrays.asList() direct List Instantiation*/
 		userRepository.saveAll(Arrays.asList(u1, u2));
 	
 		orderRepository.saveAll(Arrays.asList(o1,o2,o3));
@@ -104,7 +111,7 @@ public class TestConfig implements CommandLineRunner{
 
 	
 		/*Using Repository objects to perform their respective Repository roles of Data-Accessing while saving the 
-		  instanced objects at the Database through Arrays.asList() direct List Instantiation*/
+		  instanced objects at the Database (DataBase Seeding)  through Arrays.asList() direct List Instantiation*/
 		
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
 		
@@ -129,7 +136,21 @@ public class TestConfig implements CommandLineRunner{
 		//OBS:This will also automatically Seed the tb_product_category Association Table Database
 		
 		productRepository.saveAll(Arrays.asList(prod1,prod2,prod3,prod4,prod5));
-			
+		
+		//Instancing OrderItem Objects according to each Association defined at the Business Diagram
+		OrderItem oi1 = new OrderItem(o1, prod1, 2, prod1.getPrice());
+		OrderItem oi2 = new OrderItem(o1, prod3, 1, prod3.getPrice());
+		OrderItem oi3 = new OrderItem(o2, prod3, 2, prod3.getPrice());
+		OrderItem oi4 = new OrderItem(o3, prod5, 2, prod5.getPrice());
+		
+		/*Using OrderItem Repository object to perform its role of Data-Accessing while saving the 
+		  instanced OrderItem objects at the tb_order_item Table (DataBase Seeding) 
+		  through Arrays.asList() direct List Instantiation*/
+		
+		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+		
+		
+		
 	}
 
 }

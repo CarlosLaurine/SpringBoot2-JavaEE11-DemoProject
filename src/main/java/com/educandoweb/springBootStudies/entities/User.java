@@ -138,6 +138,8 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	//Setting Order Collection's Get Method
+	
 	public List<Order> getOrders() {
 		return orders;
 	}

@@ -4,6 +4,8 @@ package com.educandoweb.springBootStudies.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
@@ -73,8 +76,23 @@ public class Order implements Serializable{
 	
 	private User client;
 
-	//Since a framework is being used, it is obligatory to set an empty constructor	
 	
+	//Setting Order's Dependence to the Collection of OrderItems
+	//Setting its Relation as One to Many
+	//Mapping it according to OrderItemPk's Order Object's name (order)
+	//OBS: to perform this method, first we call the OrderItem Attribute id, then its id's own Attribute order through (mappedBy = "id.order")
+	@OneToMany(mappedBy = "id.order")
+	
+	private Set<OrderItem> items = new HashSet<>();
+	
+	//OBS: All Collections should be instanced in an association
+	/*OBS2: Friendly reminder that for collections the Set method 
+ 	is discarded, only the Get one is used since the list should 
+  	not change abruptly to another list*/
+	
+	
+	
+	//Since a framework is being used, it is obligatory to set an empty constructor	
 	public Order() {
 		
 	}
@@ -126,6 +144,10 @@ public class Order implements Serializable{
 		this.client = client;
 	}
 	
+	//Setting OrderItem Collection's Get Method
+	public Set<OrderItem> getItems(){
+		return items;
+	}
 
 	
 	//Setting HashCode and Equals based only on Order ID
