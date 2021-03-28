@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Defining it as a DataBase Table
 @Entity
@@ -85,6 +88,16 @@ public class Product implements Serializable{
 	inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
 	
+	
+	//Setting Product's Dependence to the Collection of OrderItems
+	//Setting its Relation as One to Many
+	//Mapping it according to OrderItemPk's Product Object's name (product)
+	//OBS: to perform this method, first we call the OrderItem Attribute id, then we call its id's own Attribute "product" through (mappedBy = "id.product")
+	
+	@OneToMany(mappedBy = "id.product")	
+	private Set<OrderItem> items = new HashSet<>();
+	
+	
 	//Since a framework is being used, it is obligatory to set an empty constructor
 	
 	public Product() {
@@ -143,6 +156,32 @@ public class Product implements Serializable{
 	public Set<Category> getCategories() {
 		return categories;
 	}
+	
+	/*According to the Flowchart and Business Rules defined for this project, 
+	  the Product will access not its OrderItems, which are between it and its Orders, 
+	  but instead it will access its Orders themselves for applicability reasons. 
+	  To perform this feature, a Get method will be created not to return a collection of OrderItems, 
+	  but a collection of Orders associated to each OrderItem at the previously set Collection.
+	  To do this, the method will create a  Set<Order> object and run through OrderItems Collection while 
+	  filtering all Orders associated with each OrderItems and adding them to the new Order Collection
+	  instantiated. Just then, it will return a brand new Order Collection and complete the 
+	  Order-Access to the Product Class through the Get Method*/
+	
+	/*OBS: Since getOrders is NOT a direct Attribute of Product, the @JsonIgnore Annotation will be placed at its Get Method,
+	  which is the significant part in this case for the Java Enterprise Platform since it
+	  is through this initial point of the chain reaction that Json calls the associated Orders
+	  and then starts the chain loop of calls (Product-Order-Product-Order, ad infinitum)*/
+	
+	@JsonIgnore
+	
+	public Set<Order> getOrders(){
+		Set<Order> set = new HashSet<>();
+		for(OrderItem item : items) {		
+			set.add(item.getOrder());
+		}
+		return set;
+	}
+	
 	
 	//Setting HashCode and Equals based only on Product ID
 	

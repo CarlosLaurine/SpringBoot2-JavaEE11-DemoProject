@@ -80,7 +80,7 @@ public class Order implements Serializable{
 	//Setting Order's Dependence to the Collection of OrderItems
 	//Setting its Relation as One to Many
 	//Mapping it according to OrderItemPk's Order Object's name (order)
-	//OBS: to perform this method, first we call the OrderItem Attribute id, then its id's own Attribute order through (mappedBy = "id.order")
+	//OBS: to perform this method, first we call the OrderItem Attribute id, then we call its id's own Attribute "order" through (mappedBy = "id.order")
 	@OneToMany(mappedBy = "id.order")
 	
 	private Set<OrderItem> items = new HashSet<>();

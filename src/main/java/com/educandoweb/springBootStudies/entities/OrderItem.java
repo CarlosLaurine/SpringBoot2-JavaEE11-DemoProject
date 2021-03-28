@@ -95,7 +95,7 @@ public class OrderItem implements Serializable{
 	
 	/*OBS: Since Order is NOT a direct Attribute of OrderItem, but instead is accessed through 
 	  OrderItem's Id, then the @JsonIgnore Annotation will be placed at its Get Method,
-	  that is the significant part in this case for the Java Enterprise Platform since it
+	  which is the significant part in this case for the Java Enterprise Platform since it
 	  is through this initial point of the chain reaction that Json calls the associated Order
 	  and then starts the chain loop of calls (Order-OrderItem-Order-OrderItem, ad infinitum)*/
 	
