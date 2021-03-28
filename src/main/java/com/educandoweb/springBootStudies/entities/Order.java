@@ -65,7 +65,9 @@ public class Order implements Serializable{
 	
 	private Integer orderStatus;
 	
+	//Setting Order-to-User Relation Type
 	@ManyToOne
+	
 	//Using a second annotation to generate a Foreign Key as a new column at the Order table at the Database, while assigning a name for this column, which is declared between the following parenthesis
 	@JoinColumn(name = "client_id")
 	
