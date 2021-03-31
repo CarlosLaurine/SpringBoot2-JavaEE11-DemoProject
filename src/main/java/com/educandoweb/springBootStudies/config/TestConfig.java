@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.educandoweb.springBootStudies.Payment;
 import com.educandoweb.springBootStudies.entities.Category;
 import com.educandoweb.springBootStudies.entities.Order;
 import com.educandoweb.springBootStudies.entities.OrderItem;
@@ -86,7 +87,7 @@ public class TestConfig implements CommandLineRunner{
 		
 		//Instancing Order objects with null IDs and related user objects at their constructors to build the DB relation
 		//OBS: At H2 Test Database, the local hour will be displayed, which can deviate from the Instant set below
-		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"),OrderStatus.PAID ,u1);
+		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"),OrderStatus.PAID ,u1);//This PAID Order Object will later be related to a Payment Entity
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"),OrderStatus.WAITING_PAYMENT, u2);
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"),OrderStatus.DELIVERED, u1); 
 		
@@ -148,6 +149,18 @@ public class TestConfig implements CommandLineRunner{
 		  through Arrays.asList() direct List Instantiation*/
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+		
+		//Setting Order-Dependent Entity Payment object
+		Payment payment1 = new Payment(null,Instant.parse("2019-06-20T21:53:07Z"),o1);
+		/*OBS: To save a Dependent Object in a One-To-One Relation, no Repositories are needed 
+		  for this Object. Instead, the Order Object used to Build the dependent Object (in this case)
+		  will set its Payment Attribute with the new Payment Object and then will be added
+		  again to the Database through its own Repository (OrderRepository). This way, the JPA
+		  will identify and set the One-to-One Association between those two Entities
+		 */
+		o1.setPayment(payment1);
+		orderRepository.save(o1);
+		
 		
 		
 		

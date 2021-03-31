@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.educandoweb.springBootStudies.Payment;
@@ -91,7 +93,14 @@ public class Order implements Serializable{
  	is discarded, only the Get one is used since the list should 
   	not change abruptly to another list*/
 	
+	//Setting Association with Payment
 	
+	/*OBS:Since this is an OneToOne Association and the Dependent Class is Payment,
+	  it is required to include in this Association Annotation (@OneToOne)
+	  another attribute  (cascade = CascadeType.ALL) in order to map both entities
+	  with the same Id (in this case, Order's) 
+	*/
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
 	private Payment payment;
 	
 	
