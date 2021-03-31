@@ -70,6 +70,18 @@ public class OrderItem implements Serializable{
 		this.price = price;
 	}
 	
+	/*Setting Subtotal method to return OrderItem's Subtotal Value 
+	  for further Logic processing/calculations*/
+	
+	/*OBS: Since at Java EE Platform, in order to be interpreted by JSON,
+	  the methods must be Getters, it will be implemented a getSubtotal()
+	  Method 
+	*/
+	public Double getSubtotal() {
+		return price * quantity;
+	}
+	
+	
 	/*Since the OrderItem must provide access to the Product/Order
 	pair to which it is related instead of to its Id (Composite PK), 
 	it is needed to set Getters and Setters for both Product and Order

@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.educandoweb.springBootStudies.Payment;
+
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -167,6 +167,23 @@ public class Order implements Serializable{
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	
+	/*Setting Total Method to return Order's Total Value 
+	  through the Sum of all related orderItem's Subtotal 
+	  Methods for further Logic processing*/
+	
+	/*OBS: Since at Java EE Platform, in order to be interpreted by JSON,
+	  the methods must be Getters, it will be implemented a getTotal()
+	  Method 
+	*/
+	
+	public Double getTotal() {
+		double sum = 0.0;
+		for(OrderItem item : items) {
+			sum += item.getSubtotal();
+		}
+		return sum;
 	}
 
 	//Setting HashCode and Equals based only on Order ID

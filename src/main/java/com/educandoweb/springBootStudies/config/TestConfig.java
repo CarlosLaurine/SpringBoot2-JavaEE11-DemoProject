@@ -8,10 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.educandoweb.springBootStudies.Payment;
 import com.educandoweb.springBootStudies.entities.Category;
 import com.educandoweb.springBootStudies.entities.Order;
 import com.educandoweb.springBootStudies.entities.OrderItem;
+import com.educandoweb.springBootStudies.entities.Payment;
 import com.educandoweb.springBootStudies.entities.Product;
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
