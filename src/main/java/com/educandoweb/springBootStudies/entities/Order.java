@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.educandoweb.springBootStudies.Payment;
 import com.educandoweb.springBootStudies.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -91,6 +92,8 @@ public class Order implements Serializable{
   	not change abruptly to another list*/
 	
 	
+	private Payment payment;
+	
 	
 	//Since a framework is being used, it is obligatory to set an empty constructor	
 	public Order() {
@@ -148,8 +151,15 @@ public class Order implements Serializable{
 	public Set<OrderItem> getItems(){
 		return items;
 	}
-
 	
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
 	//Setting HashCode and Equals based only on Order ID
 	@Override
 	public int hashCode() {
