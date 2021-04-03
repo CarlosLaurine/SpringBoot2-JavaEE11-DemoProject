@@ -1,13 +1,17 @@
 package com.educandoweb.springBootStudies.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.services.UserService;
@@ -76,4 +80,35 @@ public class UserResource {
 		
 		return ResponseEntity.ok().body(user);
 	}
+	
+	//OBS:Up to now all Endpoints' mapping was based in Get methods, since their role is to just get Data from the database (READ/SELECT)
+
+	//OBS2: From this point below, the methods will use the @PostMapping annotation based on Post Method, once they wil alter the Database Data (Update, Delete, Insert)
+
+	@PostMapping
+	
+	/*To indicate that the User object will arrive as JSON through the requisition and that it will be later de-serialized as a Java User Object, the annotation @RequestBody before the User parameter at the Method is required*/
+	public ResponseEntity<User> insert (@RequestBody User user){
+		
+		user = userService.insertUser(user);
+		
+		//Setting URI object containing the address from the newly inserted User Object 
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(user.getId()).toUri();
+		
+		
+		/*using .created() instead of .ok() in order to return a HTTP Response Code 201
+		  in order to indicate that a new resource was created (through insertion)*/
+		
+		/*
+		OBS: In this case, to fulfill the .created() method constructor, a URI-typed object is needed. 
+		This happens since at the HTTP Protocol when a 201 Response Code will be Returned, its response 
+		must contain a header (Location) containing the address from the new inserted Resource.
+		*/
+		
+		return ResponseEntity.created(uri).body(user);		
+	}
+
+
+
 }

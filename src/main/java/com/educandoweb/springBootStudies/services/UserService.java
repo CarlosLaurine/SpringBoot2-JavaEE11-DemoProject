@@ -43,4 +43,8 @@ public class UserService {
 		return user.get();
 		
 	}
+	//Inserting User at the Database and returning the Inserted User
+	public User insertUser(User user) {
+		return userRepository.save(user);
+	}
 }
