@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,8 +70,8 @@ public class UserResource {
 
 	//Setting @GetMapping Annotation to indicate that the following method will respond to HTTP protocol "get" requisition
 	/*OBS: Since the value passed at the URL will not be a simple word, but the user id (which is a parameter for its variable), 
-	  then the "id" word must be surrounded wit brackets {}*/
-	@GetMapping(value = ("/{id}"))
+	  then the "id" word must be surrounded with brackets {}*/
+	@GetMapping(value = "/{id}")
 	
 	/*OBS2:In order for spring to accept the id as a parameter and display it at the URL, it is required to put an annotation
 	  @PathVariable right before with the id Parameter at the method signature */
@@ -110,5 +111,21 @@ public class UserResource {
 	}
 
 
-
+	/*At REST protocol, the HTTP Method used to perform data deletion is the "delete", so the Springboot annotation needed for this feature is @DeleteMapping*/
+	/*OBS: Since the value passed at the URL will not be a simple word, but the user id (which is a parameter for its variable), 
+	  then the "id" word must be surrounded with brackets {}*/
+	@DeleteMapping(value = "/{id}")
+	
+	/*OBS2:In order for spring to accept the id as a parameter and display it at the URL, it is required to put an annotation
+	  @PathVariable right before with the id Parameter at the method signature */
+	
+	//OBS: ResponseEntity's generic Content will be Void, since it will have no body return
+	public ResponseEntity<Void> delete(@PathVariable Long id){
+		
+		userService.delete(id);
+		
+		/*Since this is a Response without any body (Void), the ResponseEntity method to be called is ".noContent()" followed by ".build()", since the former will return an empty Response with the HTTP Code 204 (No Content Response) */
+		
+		return ResponseEntity.noContent().build();
+	}
 }
