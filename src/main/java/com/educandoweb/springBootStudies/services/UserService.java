@@ -51,4 +51,31 @@ public class UserService {
 	public void delete(Long id) {
 		userRepository.deleteById(id);
 	}
+	
+	//Updating JPA-Monitored User and then adding it to the Database
+	
+	public User update (Long id, User editedUser) {
+		
+		/*Setting and Preparing an User Object "entity" as an entity Monitored by JPA through .getOne() 
+		  method (Making its instantiation without Database Interaction)
+		 */
+
+		/*OBS: This is a way more effective method in this case, since, differently from getUserById, 
+		 the .getOne() method will just prepare the JPA Monitored entity  "entity" instead of pulling 
+		 it from the database. In other words, this approach saves a lot of processing */
+		
+		User entity = userRepository.getOne(id);
+		
+		
+		updateData(entity, editedUser);
+		return userRepository.save(entity);
+	}
+
+	private void updateData(User entity, User editedUser) {
+		//OBS: Not all user attributes will be allowed to be modified. Id and Password will remain the same 
+		entity.setName(editedUser.getName());
+		entity.setEmail(editedUser.getEmail());
+		entity.setPhone(editedUser.getPhone());
+	}
+
 }
