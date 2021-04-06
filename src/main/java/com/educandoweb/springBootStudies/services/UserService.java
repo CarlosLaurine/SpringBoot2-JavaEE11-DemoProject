@@ -66,11 +66,13 @@ public class UserService {
 		
 		User entity = userRepository.getOne(id);
 		
-		
+		//Modifying Monitored User entity before saving it at the Database
 		updateData(entity, editedUser);
+		
+		//Saving updates at the Database
 		return userRepository.save(entity);
 	}
-
+	//Setting User entity's allowed attributes according to the editedUser set
 	private void updateData(User entity, User editedUser) {
 		//OBS: Not all user attributes will be allowed to be modified. Id and Password will remain the same 
 		entity.setName(editedUser.getName());

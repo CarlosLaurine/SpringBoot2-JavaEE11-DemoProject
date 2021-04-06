@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -111,7 +112,8 @@ public class UserResource {
 	}
 
 
-	/*At REST protocol, the HTTP Method used to perform data deletion is the "delete", so the Springboot annotation needed for this feature is @DeleteMapping*/
+	/*At REST protocol, the HTTP Method used to perform data deletion is the "delete", so the Springboot annotation needed for this feature is 	 	             	  @DeleteMapping*/
+	
 	/*OBS: Since the value passed at the URL will not be a simple word, but the user id (which is a parameter for its variable), 
 	  then the "id" word must be surrounded with brackets {}*/
 	@DeleteMapping(value = "/{id}")
@@ -124,8 +126,27 @@ public class UserResource {
 		
 		userService.delete(id);
 		
-		/*Since this is a Response without any body (Void), the ResponseEntity method to be called is ".noContent()" followed by ".build()", since the former will return an empty Response with the HTTP Code 204 (No Content Response) */
+	/*Since this is a Response without any body (Void), the ResponseEntity method to be called is ".noContent()" followed by ".build()", since 		     	  the former will return an empty Response with the HTTP Code 204 (No Content Response) */
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	/*When performing a Resource Update at Rest Pattern, the HTTP Method to be used is "Put". The Springboot annotation neede for this feature is 	 	  @PutMapping */
+	
+	/*OBS: Since the value passed at the URL will not be a simple word, but the user id (which is a parameter for its variable), 
+	  then the "id" word must be surrounded with brackets {}*/
+	
+	/*OBS2: In order for spring to accept the id as a parameter and display it at the URL, it is required to put an annotation
+	  @PathVariable right before with the id Parameter at the method signature */
+	
+	/*OBS3: To indicate that the User object will arrive as JSON through the requisition and that it will be later de-serialized as a Java User    	  	  Object, the annotation @RequestBody before the User parameter at the Method is required*/
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User editedUser){
+		
+		User entity = userService.update(id, editedUser);
+		
+		return ResponseEntity.ok().body(entity);
+		
 	}
 }
