@@ -30,7 +30,7 @@ import com.educandoweb.springBootStudies.repositories.UserRepository;
 /*Indicating to Spring that this configuration class will be specific for the test profile with 
   the following annotation. To this, one must inform the same spring profile defined
   at application.properties file between its parenthesis */
-@Profile("test")
+@Profile("prod")
 
 /*In order to EXECUTE Object Instantiation and Saving at the Database (Database Seeding), 
   the TestConfig can implement CommandLineRunner Interface*/
