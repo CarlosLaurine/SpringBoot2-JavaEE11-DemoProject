@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.educandoweb.springBootStudies.services.exceptions.DataBaseException;
 import com.educandoweb.springBootStudies.services.exceptions.ResourceNotFoundException;
 
 //Setting following Annotation in order to intercept the triggered Exceptions and handle them with its respective customized logic
@@ -19,12 +20,12 @@ import com.educandoweb.springBootStudies.services.exceptions.ResourceNotFoundExc
 public class ResourceExceptionHandler {
 
 	//Using following Annotation to define which Type of Exception will be intercepted by this Method
-	@ExceptionHandler (ResourceNotFoundException.class)
+	@ExceptionHandler (DataBaseException.class)
 	
-	public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
+	public ResponseEntity<StandardError> dataBaseViolation(DataBaseException e, HttpServletRequest request){
 	
-		String error = "Resource not Found";
-		HttpStatus status = HttpStatus.NOT_FOUND; //Setting HTTP Error Status 404 - Not Found
+		String error = "Database Violation - Error";
+		HttpStatus status = HttpStatus.BAD_REQUEST; //Setting HTTP Error Status to 400 - Bad Request
 		
 		//Fulfilling Standard Error Object with the Custom Information
 	

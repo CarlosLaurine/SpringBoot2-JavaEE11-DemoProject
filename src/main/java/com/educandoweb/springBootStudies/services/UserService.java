@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
+import com.educandoweb.springBootStudies.services.exceptions.DataBaseException;
 import com.educandoweb.springBootStudies.services.exceptions.ResourceNotFoundException;
 
 /*Registering the class as a Spring Component in order to make it available for the Spring's 
@@ -50,7 +53,18 @@ public class UserService {
 	}
 	//Deleting the User at the Database
 	public void delete(Long id) {
-		userRepository.deleteById(id);
+		try {
+			
+			userRepository.deleteById(id);
+			
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		catch (DataIntegrityViolationException e) {
+
+			throw new DataBaseException(e.getMessage());
+			
+		}
 	}
 	
 	//Updating JPA-Monitored User and then adding it to the Database
