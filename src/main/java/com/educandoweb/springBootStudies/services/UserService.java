@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.educandoweb.springBootStudies.entities.User;
 import com.educandoweb.springBootStudies.repositories.UserRepository;
+import com.educandoweb.springBootStudies.services.exceptions.ResourceNotFoundException;
 
 /*Registering the class as a Spring Component in order to make it available for the Spring's 
   Dependency-Injection Mechanism which, in this case, will be useful at declaring User 
@@ -39,8 +40,8 @@ public class UserService {
 		//OBS: the operation findByid() from JPA CRUD returns an Optional-typed object
 		Optional<User> user = userRepository.findById(id);
 		
-		//Returning User type through Optional Object Method .get()
-		return user.get();
+		//Returning User type through Optional Object Method .get() (with .orElseThrow() Method, if the .get() does not work, a Customized Exception will be thrown
+		return user.orElseThrow(() -> new ResourceNotFoundException(id));
 		
 	}
 	//Inserting User at the Database and returning the Inserted User
