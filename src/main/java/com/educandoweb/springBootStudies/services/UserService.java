@@ -3,9 +3,12 @@ package com.educandoweb.springBootStudies.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import com.educandoweb.springBootStudies.entities.User;
@@ -71,21 +74,32 @@ public class UserService {
 	
 	public User update (Long id, User editedUser) {
 		
-		/*Setting and Preparing an User Object "entity" as an entity Monitored by JPA through .getOne() 
-		  method (Making its instantiation without Database Interaction)
-		 */
+		try {
+			
+			/*Setting and Preparing an User Object "entity" as an entity Monitored by JPA through .getOne() 
+			  method (Making its instantiation without Database Interaction)
+			 */
 
-		/*OBS: This is a way more effective method in this case, since, differently from getUserById, 
-		 the .getOne() method will just prepare the JPA Monitored entity  "entity" instead of pulling 
-		 it from the database. In other words, this approach saves a lot of processing */
+			/*OBS: This is a way more effective method in this case, since, differently from getUserById, 
+			 the .getOne() method will just prepare the JPA Monitored entity  "entity" instead of pulling 
+			 it from the database. In other words, this approach saves a lot of processing */
+			
+			User entity = userRepository.getOne(id);
+			
+			//Modifying Monitored User entity before saving it at the Database
+			updateData(entity, editedUser);
+			
+			//Saving updates at the Database
+			return userRepository.save(entity);
+			
+		}
 		
-		User entity = userRepository.getOne(id);
+		catch (EntityNotFoundException e) {
+
+			throw new ResourceNotFoundException(id);
+			
+		}
 		
-		//Modifying Monitored User entity before saving it at the Database
-		updateData(entity, editedUser);
-		
-		//Saving updates at the Database
-		return userRepository.save(entity);
 	}
 	//Setting User entity's allowed attributes according to the editedUser set
 	private void updateData(User entity, User editedUser) {

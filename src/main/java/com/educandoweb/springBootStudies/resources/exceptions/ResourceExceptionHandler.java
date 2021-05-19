@@ -19,11 +19,25 @@ import com.educandoweb.springBootStudies.services.exceptions.ResourceNotFoundExc
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
+	
 	//Using following Annotation to define which Type of Exception will be intercepted by this Method
-	@ExceptionHandler (DataBaseException.class)
+		@ExceptionHandler (ResourceNotFoundException.class)
+
+		public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
+
+			String error = "Resource not Found";
+			HttpStatus status = HttpStatus.NOT_FOUND; //Setting HTTP Error Status 404 - Not Found
+
+			//Fulfilling Standard Error Object with the Custom Information
+
+			StandardError stdError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+			return ResponseEntity.status(status).body(stdError);
+		}
 	
+	//Using following Annotation to define which Type of Exception will be intercepted by this Method
+		@ExceptionHandler (DataBaseException.class)
 	public ResponseEntity<StandardError> dataBaseViolation(DataBaseException e, HttpServletRequest request){
-	
+		
 		String error = "Database Violation - Error";
 		HttpStatus status = HttpStatus.BAD_REQUEST; //Setting HTTP Error Status to 400 - Bad Request
 		

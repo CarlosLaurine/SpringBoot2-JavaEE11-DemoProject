@@ -11,7 +11,6 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.educandoweb.springBootStudies.entities.Order;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 //Defining it as a DataBase Table
