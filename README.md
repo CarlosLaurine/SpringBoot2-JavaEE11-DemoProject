@@ -1,9 +1,6 @@
 # SpringBoot2-JavaEE11-DemoProject
 
-![alt text](https://github.com/[CarlosLaurine]/[SpringBoot2-JavaEE11-DemoProject]/blob/[main]/Domain Model.png?raw=true)
-
-
-![alt text](https://github.com/[CarlosLaurine]/[SpringBoot2-JavaEE11-DemoProject]/blob/[main]/Domain Instance.png?raw=true)
+![pdf](https://drive.google.com/file/d/14s0kDhdFJJz0HP3UkyY7qOHLJI31HJ0J/view?usp=sharing )
 
 
 
